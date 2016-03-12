@@ -9,17 +9,66 @@ output:
 
 # Load some libraries
 ```{r}
+library(dplyr)
 library(ggplot2)
 ```
 # Exploratory Data Analysis
-Let's first load the data
-```{r}
+
+Let's first load the data and get some basic information from the data
+set. We also transform the dose variable to a factor, which will be
+easier to use later on.
+
+```{r loading}
 df <- ToothGrowth
+df <- df %>%
+    mutate(dose = as.factor(dose)) %>%
+	rename(delivery = supp)
+str(df)
+```
+
+We are looking at `r nrow(df)` observations of tooth length where
+there are `r nlevels(df$delivery)` delivery methods (orange juice (OJ) and
+ascorbic acid (VC)) and `r nlevels(df$dose)` dose levels (`r
+levels(df$dose)`).
+
+## Visualisation of the effect of the dose amount on tooth growth
+
+As shown in this figure, there might be an effect of the dose amount
+on the tooth growth. We will explore this in more detail later.
+
+```{r boxplot_dose}
+ggplot(data=df, aes(x=dose,y=len)) +
+    geom_boxplot(aes(fill=dose)) +
+    labs(x = "dose",
+         y="Tooth length",
+         title="Boxplot of tooth length versus dose");
+```
+## Visualisation of the effect of the delivery method on tooth growth
+
+As shown in this figure, there does not seem to be much of an effect
+of the delivery method on tooth growth. We will explore this in more
+detail later.
+
+```{r boxplot_delivery}
+ggplot(data=df, aes(x=delivery,y=len)) +
+    geom_boxplot(aes(fill=delivery)) +
+    labs(x = "delivery",
+         y="Tooth length",
+         title="Boxplot of tooth length versus delivery method");
 ```
 
 
+# Questions and Key Assumptions
 
-# Key Assumptions
+Our analysis will seek to answer two questions:
+
+1. Does the dose amount change the tooth growth?
+2. Does the delivery method change the tooth growth?
+
+For our analysis to hold, we make the following key assumptions about
+the data:
+
+- 
 
 # Hypothesis Tests 
 
@@ -31,5 +80,5 @@ df <- ToothGrowth
 
 # Appendix
 
-```{r code=readLines(knitr::purl('./tooth_growth.Rmd', documentation = 0)), eval = FALSE}
-```
+<!-- ```{r code=readLines(knitr::purl('./tooth_growth.Rmd', documentation = 1)), eval = FALSE} -->
+<!-- ``` -->
