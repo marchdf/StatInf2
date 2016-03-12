@@ -62,8 +62,9 @@ For each delivery method, let's look at the effect of the dose on the
 tooth growth.
 
 ```{r boxplot_both}
-ggplot(data=df, aes(x=delivery,y=len)) +
-    geom_boxplot(aes(fill=delivery)) + facet_wrap(~ delivery) +
+ggplot(data=df, aes(x=dose,y=len)) +
+    geom_boxplot(aes(fill=dose)) +
+    facet_wrap(~ delivery) +
     labs(x = "delivery",
          y="Tooth length",
          title="Boxplot of tooth length versus delivery method");
