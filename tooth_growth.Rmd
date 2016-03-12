@@ -1,0 +1,35 @@
+---
+title: "Testing doses and supplements in R tooth growth data"
+author: "Marc T. Henry de Frahan"
+output: 
+  pdf_document
+---
+
+# Synopsis
+
+# Load some libraries
+```{r}
+library(ggplot2)
+```
+# Exploratory Data Analysis
+Let's first load the data
+```{r}
+df <- ToothGrowth
+```
+
+
+
+# Key Assumptions
+
+# Hypothesis Tests 
+
+# Conclusions 
+
+
+
+\newpage
+
+# Appendix
+
+```{r code=readLines(knitr::purl('./tooth_growth.Rmd', documentation = 0)), eval = FALSE}
+```
