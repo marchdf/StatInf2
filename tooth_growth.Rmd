@@ -1,5 +1,5 @@
 ---
-title: "Testing doses and supplements in R tooth growth data"
+title: "Effect of Vitamin C dose and delivery method on guinea pig tooth growth"
 author: "Marc T. Henry de Frahan"
 output: 
   pdf_document
@@ -43,6 +43,7 @@ ggplot(data=df, aes(x=dose,y=len)) +
          y="Tooth length",
          title="Boxplot of tooth length versus dose");
 ```
+
 ## Visualisation of the effect of the delivery method on tooth growth
 
 As shown in this figure, there does not seem to be much of an effect
