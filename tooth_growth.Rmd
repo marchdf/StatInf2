@@ -1,24 +1,30 @@
 ---
 title: "Effect of Vitamin C dose and delivery method on guinea pig tooth growth"
 author: "Marc T. Henry de Frahan"
-output: 
-  pdf_document
+output:
+  pdf_document:
+    fig_width: 3.5
+    fig_height: 3
+    number_sections: true
+    fig_caption: true
 ---
 
 # Synopsis
 
-# Load some libraries
-```{r}
-library(dplyr)
-library(ggplot2)
-```
+In this report, we analyze the effect of vitamin C dose amount and delivery method through supplements on the tooth growth of guinea pigs. Through hypothesis testing, we find that:
+
+1. Increasing the dose of vitamin C increases the tooth growth.
+2. The delivery method for vitamin C does not affect tooth growth.
+
 # Exploratory Data Analysis
 
 Let's first load the data and get some basic information from the data
 set. We also transform the dose variable to a factor, which will be
 easier to use later on.
 
-```{r loading}
+```{r echo = FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+library(ggplot2)
 df <- ToothGrowth
 df <- df %>%
     mutate(dose = as.factor(dose)) %>%
@@ -30,38 +36,30 @@ We are looking at `r nrow(df)` observations of tooth length where
 there are `r nlevels(df$delivery)` delivery methods (orange juice (OJ) and
 ascorbic acid (VC)) and `r nlevels(df$dose)` dose levels (`r levels(df$dose)`).
 
-## Visualisation of the effect of the dose amount on tooth growth
+## Visualisation of the effect of dose and the delivery method on tooth growth
 
-As shown in this figure, there might be an effect of the dose amount
-on the tooth growth. We will explore this in more detail later.
-
-```{r boxplot_dose}
+As shown in Figure 1, there might be an effect of the dose amount on
+the tooth growth. As shown in Figure 2, there does not seem to be much
+of an effect of the delivery method on tooth growth.
+```{r echo = FALSE, fig.cap="Tooth length versus dose"}
 ggplot(data=df, aes(x=dose,y=len)) +
     geom_boxplot(aes(fill=dose)) +
     labs(x = "dose",
          y="Tooth length",
-         title="Boxplot of tooth length versus dose");
+         title="Tooth length versus dose");
 ```
-
-## Visualisation of the effect of the delivery method on tooth growth
-
-As shown in this figure, there does not seem to be much of an effect
-of the delivery method on tooth growth. We will explore this in more
-detail later.
-
-```{r boxplot_delivery}
+```{r echo = FALSE,  fig.cap="tooth length versus delivery method"}
 ggplot(data=df, aes(x=delivery,y=len)) +
     geom_boxplot(aes(fill=delivery)) +
     labs(x = "delivery",
          y="Tooth length",
-         title="Boxplot of tooth length versus delivery method");
+         title="Tooth length versus delivery");
 ```
-## Visualisation of the effect of dose and the delivery method on tooth growth
 
 For each delivery method, let's look at the effect of the dose on the
 tooth growth.
 
-```{r boxplot_both}
+```{r echo = FALSE}
 ggplot(data=df, aes(x=dose,y=len)) +
     geom_boxplot(aes(fill=dose)) +
     facet_wrap(~ delivery) +
@@ -85,7 +83,10 @@ Our analysis will seek to answer two questions:
 For our analysis to hold, we make the following key assumptions about
 the data:
 
-- 
+- We are dealing with independent random populations with different variances.
+- All the guinea pigs used in this experiment are similar.
+- The experiments were done as a double-blind test (the experimenters did not know which guinea pigs received which treatments).
+
 
 # Hypothesis Tests 
 
@@ -93,18 +94,24 @@ the data:
 
 The null hypothesis is that the dose amount does not affect the tooth growth, i.e. for the difference doses, the difference in the means is zero. The alternative the is that the dose amount does affect the tooth growth. We perform hypothesis testing between each of the difference doses to see if we can reject the null hypothesis.
 
+- Testing the difference of means between dose 0.5 mg and 1 mg:
 ```{r}
-dose_test12 <- t.test(len ~ dose, data = df[df$dose %in% c(0.5,1),], paired = F, var.equal = F)
+dose_test12 <- t.test(len ~ dose, data = df[df$dose %in% c(0.5,1),],
+                      paired = FALSE, var.equal = FALSE)
 ```
 The resulting confidence interval is [`r dose_test12$conf[1]`, `r dose_test12$conf[2]`] and does not contain zero.
 
+- Testing the difference of means between dose 1 mg and 2 mg:
 ```{r}
-dose_test23 <- t.test(len ~ dose, data = df[df$dose %in% c(1,2),], paired = F, var.equal = F)
+dose_test23 <- t.test(len ~ dose, data = df[df$dose %in% c(1,2),],
+                      paired = FALSE,var.equal = FALSE)
 ```
 The resulting confidence interval is [`r dose_test23$conf[1]`, `r dose_test23$conf[2]`] and does not contain zero.
 
+- Testing the difference of means between dose 0.5 mg and 2 mg:
 ```{r}
-dose_test13 <- t.test(len ~ dose, data = df[df$dose %in% c(0.5,2),], paired = F, var.equal = F)
+dose_test13 <- t.test(len ~ dose, data = df[df$dose %in% c(0.5,2),],
+                      paired = FALSE, var.equal = FALSE)
 ```
 The resulting confidence interval is [`r dose_test13$conf[1]`, `r dose_test13$conf[2]`] and does not contain zero.
 
@@ -125,12 +132,16 @@ The resulting confidence interval is [`r delivery_test$conf[1]`, `r delivery_tes
 
 
 # Conclusions 
+Under our assumptions, we can answer both our questions:
 
+1. Increasing the dose of vitamin C increases the tooth growth.
+2. The delivery method for vitamin C does not affect tooth growth.
 
 
 \newpage
 
 # Appendix
+The version history of this document can be found at the [GitHub repository page](https://github.com/marchdf/StatInf2). Here is the full code used in this document.
 
-<!-- ```{r code=readLines(knitr::purl('./tooth_growth.Rmd', documentation = 1)), eval = FALSE} -->
-<!-- ``` -->
+```{r code=readLines(knitr::purl('./tooth_growth.Rmd', documentation = 1)), eval = FALSE}
+```
