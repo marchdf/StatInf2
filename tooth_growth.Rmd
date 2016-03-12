@@ -67,9 +67,13 @@ ggplot(data=df, aes(x=dose,y=len)) +
     facet_wrap(~ delivery) +
     labs(x = "delivery",
          y="Tooth length",
-         title="Boxplot of tooth length versus delivery method");
+         title="Boxplot of tooth length");
 ```
 
+Our exploratory analysis seems to indicate that increasing the dose
+amount increases the tooth length. Using orange juice might boost the
+tooth length at lower doses compared to ascorbic acid but that effect
+looks like it dissappears for a dose of 2 mg.
 
 # Questions and Key Assumptions
 
@@ -87,9 +91,38 @@ the data:
 
 ## Does the dose amount change the tooth growth?
 
+The null hypothesis is that the dose amount does not affect the tooth growth, i.e. for the difference doses, the difference in the means is zero. The alternative the is that the dose amount does affect the tooth growth. We perform hypothesis testing between each of the difference doses to see if we can reject the null hypothesis.
+
+```{r}
+dose_test12 <- t.test(len ~ dose, data = df[df$dose %in% c(0.5,1),], paired = F, var.equal = F)
+```
+The resulting confidence interval is [`r dose_test12$conf[1]`, `r dose_test12$conf[2]`] and does not contain zero.
+
+```{r}
+dose_test23 <- t.test(len ~ dose, data = df[df$dose %in% c(1,2),], paired = F, var.equal = F)
+```
+The resulting confidence interval is [`r dose_test23$conf[1]`, `r dose_test23$conf[2]`] and does not contain zero.
+
+```{r}
+dose_test13 <- t.test(len ~ dose, data = df[df$dose %in% c(0.5,2),], paired = F, var.equal = F)
+```
+The resulting confidence interval is [`r dose_test13$conf[1]`, `r dose_test13$conf[2]`] and does not contain zero.
+
+None of the confidence intervals contain zero so we can reject the null hypothesis. Increasing the dose does indeed increase the tooth growth.
+
 ## Does the delivery method change the tooth growth?
 
-The null hypothesis is that the delivery method does not affect the tooth growth. The alternative then is that the delivery method does affect the tooth growth. We perform hypothesis testing to see if we can reject the null hypothesis. 
+The null hypothesis is that the delivery method does not affect the
+tooth growth, i.e. the difference in the means is zero. The
+alternative then is that the delivery method does affect the tooth
+growth. We perform hypothesis testing to see if we can reject the null
+hypothesis:
+
+```{r}
+delivery_test <- t.test(len ~ delivery, data = df, paired = F, var.equal = F)
+```
+The resulting confidence interval is [`r delivery_test$conf[1]`, `r delivery_test$conf[2]`]. Since this interval contains zero, we can not reject the null hypothesis. This means that the delivery method does not affect tooth growth.
+
 
 # Conclusions 
 
